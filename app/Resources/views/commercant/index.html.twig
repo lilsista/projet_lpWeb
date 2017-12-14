@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-dark sidebar position-fixed">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link " href="{{ path('produits') }}">Produits</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('client') }}">Clients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('commande') }}">Commandes</a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+            <h1>Commande.s non livrée.s</h1>
+
+            <section class="row placeholders d-flex flex-column ">
+                <div class=" placeholder commande">
+                    <h4>Titre de la Commande</h4>
+                    <div class="text-muted">Comntenu de la commande</div>
+                </div>
+                <div class=" placeholder commande">
+                    <h4>Titre de la Commande</h4>
+                    <div class="text-muted">Comntenu de la commande</div>
+                </div>
+                <div class=" placeholder commande">
+                    <h4>Titre de la Commande</h4>
+                    <div class="text-muted">Comntenu de la commande</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

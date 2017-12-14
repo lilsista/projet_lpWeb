@@ -1,0 +1,31 @@
+body{
+    margin:0;
+}
+.page{
+    display:flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.footer{
+   min-height: 10vh;
+}
+
+.content{
+    flex:1;
+ }
+
+.alert-danger{
+    display:none;
+}
+.sidebar{
+   min-height: 100vh;
+}
+.commande{
+    border: 1px solid #CCCCCC;
+    padding: 10px;
+    margin-bottom: 30px;
+    margin-left: 50px;
+}
+.header{
+    margin-bottom: 30px;
+}
