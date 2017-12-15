@@ -43,7 +43,7 @@
                             </li>
 
                         </ul>
-                         {% if app.request.attributes.get("_route") == "commercant" %}
+                         {% if app.request.attributes.get("_route") == "commercant" or app.request.attributes.get("_route") == "produits" %}
                              <ul>
                                  <li class="nav-item">
                                      <a class="nav-link" href="{{ path('logout') }}">logout</a>

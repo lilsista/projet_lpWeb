@@ -29,3 +29,13 @@ body{
 .header{
     margin-bottom: 30px;
 }
+.formulaireProduit{
+    border:1px solid #CCCCCC;
+    width: 50%;
+    margin: 50px auto;
+    padding: 20px;
+}
+.formulaireProduit form{
+    width:80%;
+    margin: 0 auto;
+}

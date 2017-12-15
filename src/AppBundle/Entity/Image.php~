@@ -1,0 +1,135 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+/**
+ * Image
+ *
+ * @ORM\Table(name="image")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ImageRepository")
+ */
+class Image
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+
+    private $file;
+
+
+    private $saveFilename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=255)
+     */
+    private $url;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="alt", type="string", length=255)
+     */
+    private $alt;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set file
+     *
+     * @param string $file
+     *
+     * @return Image
+     */
+    public function setFile(UploadedFile $file)
+    {
+        $this->file = $file;
+
+        // on verifi si on déja un fichier
+        if(null !== $this->url){
+            // on sauvegarde 'extension du ficher pour le supprimer plus tard
+            $this->saveFilename = $this->url;
+
+            // on réinitialise les valeurs des attributs url et alt
+            $this->url = null;
+            $this->alt = null;
+        }
+    }
+
+    public function preUpload(){
+        if(null === $this->file){
+            return;
+        }
+
+        // Le nom du fichier est son id, on doit juste stocker également son extension
+        // Pour faire propre, on devrait renommer cet attribut en « extension », plutôt que « url »
+        $this->url = $this->file->guessExtension();
+
+        // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute
+
+        $this->alt = $this->file->getClientOriginalName();
+    }
+
+    public function upload(){
+        if(null === $this->file){
+            return;
+        }
+
+        // si on avait un acien fichier on le supprime
+        if(null !== $this->saveFilename){
+            $oldFile = $this->getUploadRootDir().'/'.$this->id.'.'.$this->saveFilename;
+            if(file_exists($oldFile)){
+                unlink($oldFile);
+            }
+        }
+
+        // on déplace le fichier envoyer dans un répertoire
+        $this->file->move(
+            $this->getUploadRootDir(), // le répertoire de destination
+            $this->id.'.'.$this->url //le non du fichier
+        );
+    }
+
+    public function removeUpload(){
+        if(file_exists($this->saveFilename)){
+            // on supprime le fichier
+            unlink($this->saveFilename());
+        }
+    }
+
+    public function getUploadDir(){
+        return 'upload/img';
+
+    }
+
+    public function getWebPath()
+    {
+        return $this->getUploadDir() . '/' . $this->getId() . '.' . $this->getURL();
+
+    }
+
+    protected function getUploadRootDir(){
+        return __DIR__.'/../../../Web/'.$this->getUploadDir();
+    }
+
+}
+
