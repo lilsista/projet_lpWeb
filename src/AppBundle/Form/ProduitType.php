@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\Image;
 use function Sodium\add;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -26,8 +25,8 @@ class ProduitType extends AbstractType
             ->add('description',TextareaType::class)
             ->add('prix',MoneyType::class)
             ->add('quantite',NumberType::class)
-            ->add('image',FileType::class, array('label' => 'Image(JPG)'))
-            ->add('ajouter',SubmitType::class);
+            ->add('image',FileType::class, array('label' => 'Image(JPG)','required'=>false, 'data_class'=>null));
+
     }
     
     /**

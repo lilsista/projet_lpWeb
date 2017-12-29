@@ -26,7 +26,21 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-
+                    {% if app.request.attributes.get("_route") == "listeProduit" or app.request.attributes.get("_route") == "ajoutProduit" %}
+                    <div class="collapse navbar-collapse" id="navbarColor01">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ path('homepage') }}">Home<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('ajoutProduit') }}">Ajouter Produit</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('listeProduit') }}">Liste Produits</a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% else %}
                     <div class="collapse navbar-collapse" id="navbarColor01">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
@@ -43,7 +57,7 @@
                             </li>
 
                         </ul>
-                         {% if app.request.attributes.get("_route") == "commercant" or app.request.attributes.get("_route") == "produits" %}
+                         {% if app.request.attributes.get("_route") == "commercant" or app.request.attributes.get("_route") == "ajoutProduit" %}
                              <ul>
                                  <li class="nav-item">
                                      <a class="nav-link" href="{{ path('logout') }}">logout</a>
@@ -56,6 +70,7 @@
                             </form>
                         {% endif %}
                     </div>
+                    {% endif %}
                 </nav>
 
 
