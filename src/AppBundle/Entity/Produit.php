@@ -57,6 +57,30 @@ class Produit
     private $image;
 
     /**
+     * @ORM\Column(type="boolean", options={"default" = true})
+     */
+    private $estCatalogue;
+
+    /**
+     * @return mixed
+     */
+    public function getEstCatalogue()
+    {
+        return $this->estCatalogue;
+    }
+
+    /**
+     * @param mixed $estCatalogue
+     * @return Produit
+     */
+    public function setEstCatalogue($estCatalogue)
+    {
+        $this->estCatalogue = $estCatalogue;
+
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return int

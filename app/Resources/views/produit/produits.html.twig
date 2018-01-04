@@ -5,7 +5,7 @@
 
     <h1 class="text-center">Liste des Produits</h1>
     {% if listeProduit is defined %}
-        <table class="table">
+        <table class="table" id="listeProduit">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
@@ -15,6 +15,7 @@
                     <th scope="col">Prix €</th>
                     <th scope="col">Quantité</th>
                     <th scope="col">Modifier</th>
+                    <th scope="col">Supprimer</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,10 +28,11 @@
                         <th>{{ produit.prix }}</th>
                         <th>{{ produit.quantite }}</th>
                         <th><button class="btn btn-dark"><a href="{{ path('modifierProduit',{'id':produit.id} ) }}">Modifier</a></button></th>
+                        <th><button class="btn btn-danger"><a href="{{ path('supprimer',{'id':produit.id}) }}">Supprimer</a></button></th>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <nav  aria-label="Page navigation example">{{ knp_pagination_render(listeProduit) }}</nav>
+       <nav  aria-label="Page navigation example">{{ knp_pagination_render(listeProduit) }}</nav>
     {% endif %}
 {% endblock %}
