@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Panier;
 use AppBundle\Entity\Produit;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,18 +27,41 @@ class DefaultController extends Controller
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        $repository = $this->getDoctrine()->getManager()->getRepository(Produit::class);
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(Produit::class);
         $listeProduit = $repository->findBy(
             ['estCatalogue'=> true]
         );
         $produit = $this->get('knp_paginator')->paginate($listeProduit,$request->query->get('page',1),5);
 
+        $sessionUser = $this->get('session');
+        $idUser = $sessionUser->getID();
+
+        // on verifie si le panier exite dans la base de donnée
+
+        $repositoryPanier = $em->getRepository(Panier::class);
+        $panier = $repositoryPanier->findOneBy(
+            ['idClient' => $idUser]
+        );
+
+        if($panier == null){
+            // je creer un nouveau panier
+            $panier = new Panier();
+
+            $panier->setIdClient($idUser);
+            $em->persist($panier);
+            $em->flush();
+
+        }
+
         return $this->render('default/index.html.twig', array('last_username' => $lastUsername,
-            'error'=> $error,'listeProduit' => $produit));
+            'error'=> $error,'listeProduit' => $produit,'panier' => $panier));
     }
 
     /**
      * @Route("/trier/{item}",name="trier")
+     * @param $item
+     * @return Response
      */
     public function trierAction($item){
 

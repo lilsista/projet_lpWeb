@@ -46,21 +46,17 @@
                             <li class="nav-item active">
                                 <a class="nav-link" href="{{ path('homepage') }}">Home <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Features</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Pricing</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-
                         </ul>
                          {% if app.request.attributes.get("_route") == "commercant" or app.request.attributes.get("_route") == "ajoutProduit" %}
                              <ul>
                                  <li class="nav-item">
                                      <a class="nav-link" href="{{ path('logout') }}">logout</a>
+                                 </li>
+                             </ul>
+                         {% elseif app.request.attributes.get("_route") == "homepage" %}
+                             <ul>
+                                 <li class="nav-item">
+                                     <a class="nav-link" href="{{ path('panier',{'idPanier': panier.id}) }}"> panier</a>
                                  </li>
                              </ul>
                          {% else %}

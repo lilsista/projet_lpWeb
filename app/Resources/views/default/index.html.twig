@@ -12,6 +12,11 @@
                             <p><span class="designation">{{ produit.designation }}</span> <span class="prix">{{ produit.prix }}</span>€</p>
                             <p class="description">{{ produit.description }}</p>
                             <p> il en reste <span class="quantite">{{ produit.quantite }}</span></p>
+                            {% if produit.quantite == 0 %}
+                                <p class="text-right text-warning"> en cours de réaprovisionnement</p>
+                            {% else %}
+                                <p class="text-right"><button class="btn btn-success"><a href="{{ path('ajouterPanier',{'id': produit.id,'idPanier' : panier.id } ) }}"> Ajouter</a></button></p>
+                            {% endif %}
                         </figcaption>
                     </figure>
 

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if panier == null %}
+        <p>votre panier est vide</p>
+    {% else %}
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Désignation</th>
+                <th scope="col">Quantite</th>
+                <th scope="col">Prix €</th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for panierContient in panier %}
+            <tr>
+                <td><img class="img-fluid img-liste-produit" src="{{ asset('uploads/image/'~panierContient.idProduit.image) }}"></td>
+                <td>{{ panierContient.idProduit.designation }}</td>
+                <td>{{ panierContient.quantite }}</td>
+                <td>{{ panierContient.idProduit.prix }}</td>
+            </tr>
+
+        {% endfor %}
+        </table>
+    {% endif %}
+
+{% endblock %}

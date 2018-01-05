@@ -28,12 +28,14 @@ $("document").ready(function () {
                         var designation = $('<p><span class="designation">'+prod.designation+'</span> <span class="prix">'+prod.prix+'</span>€</p>');
                         var description = $('<p class="description">'+prod.description+'</p>');
                         var quantite = $('<p> il en reste <span class="quantite">'+prod.quantite+'</span></p>');
+                        var ajouter = $('<p class="text-right"><button class="btn btn-success">Ajouter</button></p>');
                         figure.appendTo(div);
                         image.appendTo(figure);
                         figcaption.appendTo(figure);
                         designation.appendTo(figcaption);
                         description.appendTo(figcaption);
                         quantite.appendTo(figcaption);
+                        ajouter.appendTo(figcaption);
                     })
                 }
             });
