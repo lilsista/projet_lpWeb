@@ -13,6 +13,8 @@ use AppBundle\Entity\PanierContient;
 use AppBundle\Entity\Produit;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class PanierController extends Controller
 {
@@ -32,7 +34,17 @@ class PanierController extends Controller
             ['idPanier' => $idPanier]
         );
 
-        return $this->render('panier/panier.html.twig',array('panier' => $panierContient));
+
+
+        // le prix Total
+        $prixTotal = 0;
+
+        foreach ($panierContient as $value){
+            $prixTotal = $prixTotal + ($value->getIdProduit()->getPrix()*$value->getQuantite());
+        }
+
+
+        return $this->render('panier/panier.html.twig',array('panier' => $panierContient, 'prixTotal'=> $prixTotal));
     }
 
     /**
@@ -62,6 +74,34 @@ class PanierController extends Controller
         return $this->redirect($this->generateUrl('panier',array('idPanier' => $idPanier)));
 
 
+
+    }
+
+    /**
+     * @Route("/quantite/{id}/{quantite}", name="quantite")
+     * @param $id
+     * @param $quantite
+     */
+    public function changeprixAction($id,$quantite){
+        $em = $this->getDoctrine()->getManager();
+        $repositoty = $em->getRepository(PanierContient::class);
+
+        // on récupére le produit
+        $panierContient = $repositoty->findOneBy(
+            ['id' => $id]
+        );
+
+        $panier = $repositoty->findAll();
+
+        // on modifi la quantité
+       $panierContient->setQuantite($quantite);
+       $em->flush();
+
+       $quantiteModif = $panierContient->getQuantite();
+       $prix = $panierContient->getIdProduit()->getPrix();
+       $prixTotal = $quantiteModif*$prix;
+       $reponse = new JsonResponse();
+        return $reponse->setData(array('prixTotal'=> $prixTotal));
 
     }
 }

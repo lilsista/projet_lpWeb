@@ -7,10 +7,11 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th scope="col">Image</th>
+                <th scope="col">Produit</th>
                 <th scope="col">Désignation</th>
                 <th scope="col">Quantite</th>
                 <th scope="col">Prix €</th>
+                <th scope="col">Total</th>
             </tr>
             </thead>
             <tbody>
@@ -18,12 +19,30 @@
             <tr>
                 <td><img class="img-fluid img-liste-produit" src="{{ asset('uploads/image/'~panierContient.idProduit.image) }}"></td>
                 <td>{{ panierContient.idProduit.designation }}</td>
-                <td>{{ panierContient.quantite }}</td>
-                <td>{{ panierContient.idProduit.prix }}</td>
+                <td>
+                    <select id="{{ panierContient.id }}">
+                        {% for quantite in 1..10 %}
+                            {% if quantite == panierContient.quantite %}
+                                <option  value="{{ quantite }}" selected>{{ quantite }}</option>
+                            {% else %}
+                                <option value="{{ quantite }}">{{ quantite }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+                <td class="prixUnitaire">{{ panierContient.idProduit.prix }}</td>
+                <td class="totalProduit totalProduit{{ panierContient.id }}">{{ panierContient.quantite*panierContient.idProduit.prix }}</td>
             </tr>
 
         {% endfor %}
+        <tr>
+            <td></td><td></td><td></td><td></td>
+            <td class="totalGobal">{{ prixTotal }}</td>
+        </tr>
         </table>
+        <div class="text-right">
+            <button class="btn btn-info">Commander</button>
+        </div>
     {% endif %}
 
 {% endblock %}
