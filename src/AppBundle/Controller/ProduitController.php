@@ -76,6 +76,8 @@ class ProduitController extends Controller
 
     /**
      * @Route("/produits",name="listeProduit")
+     * @param Request $req
+     * @return Response
      */
     public function listeProduitAction(Request $req){
 
@@ -93,6 +95,9 @@ class ProduitController extends Controller
 
     /**
      * @Route("/modifier/{id}",name="modifierProduit")
+     * @param $id
+     * @param Request $request
+     * @return Response
      */
     public function modifierProduitAction($id, Request $request){
         //on récupére les informations du produit dont l'id = $id

@@ -6,6 +6,7 @@ use AppBundle\Entity\Panier;
 use AppBundle\Entity\Produit;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -16,14 +17,15 @@ use Symfony\Component\Serializer\Serializer;
 
 class DefaultController extends Controller
 {
+
     /**
      * @Route("/", name="homepage")
      * @param Request $request
-     * @param AuthenticationUtils $authenticationUtils
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request,AuthenticationUtils $authenticationUtils)
     {
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -54,8 +56,7 @@ class DefaultController extends Controller
 
         }
 
-        return $this->render('default/index.html.twig', array('last_username' => $lastUsername,
-            'error'=> $error,'listeProduit' => $produit,'panier' => $panier));
+        return $this->render('default/index.html.twig', array('listeProduit' => $produit,'panier' => $panier,'error'=>$error,'last_username' =>$lastUsername));
     }
 
     /**

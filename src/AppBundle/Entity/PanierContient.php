@@ -42,6 +42,28 @@ class PanierContient
      */
     private $quantite;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="estCommander", type="boolean",options={"default" = false})
+     */
+    private $est_commander;
+
+    /**
+     * @return bool
+     */
+    public function isEstCommander()
+    {
+        return $this->est_commander;
+    }
+
+    /**
+     * @param bool $est_commander
+     */
+    public function setEstCommander($est_commander)
+    {
+        $this->est_commander = $est_commander;
+    }
 
     /**
      * Get id

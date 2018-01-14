@@ -5,15 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block title %}Ecommerce!{% endblock %}</title>
         {% block stylesheets %}
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
             <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
         {% endblock %}
-        {% block javascripts %}
-            <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-            <script src="{{ asset('js/ecommerce.js') }}"></script>
-        {% endblock %}
+
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
@@ -59,6 +54,12 @@
                                      <a class="nav-link" href="{{ path('panier',{'idPanier': panier.id}) }}"> panier</a>
                                  </li>
                              </ul>
+                         {% elseif app.request.attributes.get('_route') == "panier" %}
+                             <ul>
+                                 <li class="nav-item">
+                                     <a class="nav-link" href="{{ path('commandeClient',{'id': idPanier}) }}"> Vos Commandes</a>
+                                 </li>
+                             </ul>
                          {% else %}
                             <form class="form-inline">
                                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
@@ -68,8 +69,6 @@
                     </div>
                     {% endif %}
                 </nav>
-
-
         {% endblock %}
         </header>
 
@@ -82,7 +81,13 @@
             {% block footer %}
             {% endblock %}
 
-    </div>
 
+    </div>
+    {% block javascripts %}
+        <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+
+    {% endblock %}
     </body>
 </html>

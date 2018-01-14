@@ -1,12 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<div class="container-fluid">
     {% if panier == null %}
         <p>votre panier est vide</p>
+    {% elseif estCommander == true %}
+        <p>votre panier est vide</p>
     {% else %}
+    <div class="table-responsive">
         <table class="table">
             <thead class="thead-dark">
             <tr>
+                <th scope="col" class="idpanier" style=" display: none;">{{ idPanier }}</th>
                 <th scope="col">Produit</th>
                 <th scope="col">Désignation</th>
                 <th scope="col">Quantite</th>
@@ -20,8 +25,8 @@
                 <td><img class="img-fluid img-liste-produit" src="{{ asset('uploads/image/'~panierContient.idProduit.image) }}"></td>
                 <td>{{ panierContient.idProduit.designation }}</td>
                 <td>
-                    <select id="{{ panierContient.id }}">
-                        {% for quantite in 1..10 %}
+                    <select id="{{ panierContient.id }}" title="quantite">
+                        {% for quantite in 1..panierContient.idProduit.quantite %}
                             {% if quantite == panierContient.quantite %}
                                 <option  value="{{ quantite }}" selected>{{ quantite }}</option>
                             {% else %}
@@ -35,14 +40,62 @@
             </tr>
 
         {% endfor %}
-        <tr>
-            <td></td><td></td><td></td><td></td>
-            <td class="totalGobal">{{ prixTotal }}</td>
-        </tr>
+            <tr>
+                <td></td><td></td><td></td><td></td>
+                <td class="totalGobal">{{ prixTotal }}</td>
+            </tr>
         </table>
+    </div>
         <div class="text-right">
-            <button class="btn btn-info">Commander</button>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal">Commander</button>
+        </div>
+            <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Entrer vos Informations</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="apres_envoyer alert alert-danger" style="display: none;"></div>
+                        <form style="width: 400px;margin: 0 auto;" id="formClient" >
+                            <div class="form-group text-left">
+                                <label for="exampleInputEmail1" class="required">Email address</label>
+                                <input type="text" class="form-control input" id="email"  placeholder="Enter email">
+                                <div id="valid_email" class="erreur alert alert-danger" style="display: none"></div>
+                            </div>
+                            <div class="form-group text-left">
+                                <label for="exampleInputPassword1" class="required">nom</label>
+                                <input type="text" class="form-control input text" id="nom" placeholder="Nom">
+                                <div id="valid_nom" class="erreur alert alert-danger" style="display: none"></div>
+                            </div>
+                            <div class="form-group text-left">
+                                <label for="exampleInputPassword1" class="required">Prénom</label>
+                                <input type="text" class="form-control input text" id="prenom" placeholder="Prénom">
+                                <div id="valid_prenom" class="erreur alert alert-danger" style="display: none"></div>
+                            </div>
+                            <input style="display: none;" type="text" id="idpanier" value="{{ idPanier }}">
+
+                            <button type="submit" id="validerCommande" class="btn btn-primary">Envoyer</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
     {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+    <script src="{{ asset('js/ecommerce.js') }}"></script>
+    <script src="{{ asset("js/commande.js") }}"></script>
 
 {% endblock %}

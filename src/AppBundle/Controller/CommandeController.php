@@ -9,17 +9,33 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Commande;
+use AppBundle\Entity\PanierContient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class CommandeController extends Controller
 {
     /**
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/commande",name="commande")
+     * @Route("/commande/{id}",name="commandeClient")
      */
-    public function commandeAction(){
-        return $this->render('commande/commande.html.twig');
+    public function commandeAction($id){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository(Commande::class);
+        $repositoryPanier = $em->getRepository(PanierContient::class);
+
+        $commandeClient = $repository->findBy(array(
+            'panier' => $id
+        ));
+        $panier = $repositoryPanier->findBy(array(
+            'idPanier' => $id
+        ));
+
+        return $this->render('commande/commande.html.twig',array('commande'=>$commandeClient,'panier' =>$panier));
     }
 
 }

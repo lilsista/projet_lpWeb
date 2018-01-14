@@ -22,7 +22,7 @@
                 {% for produit in listeProduit %}
                     <tr>
                         <th>{{ produit.id }}</th>
-                        <th><img class="img-fluid img-liste-produit" src="{{ asset('uploads/image/'~produit.image) }}"></th>
+                        <th><img class="img-fluid img-liste-produit" src="{{ absolute_url(asset('uploads/image/'~produit.image)) }}"></th>
                         <th>{{ produit.designation }}</th>
                         <th>{{ produit.description }}</th>
                         <th>{{ produit.prix }}</th>

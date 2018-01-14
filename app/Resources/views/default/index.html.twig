@@ -15,7 +15,7 @@
                             {% if produit.quantite == 0 %}
                                 <p class="text-right text-warning"> en cours de réaprovisionnement</p>
                             {% else %}
-                                <p class="text-right"><button class="btn btn-success"><a href="{{ path('ajouterPanier',{'id': produit.id,'idPanier' : panier.id } ) }}"> Ajouter</a></button></p>
+                                <p class="text-right"><button class="btn btn-primary"><a class="text-dark" href="{{ path('ajouterPanier',{'id': produit.id,'idPanier' : panier.id } ) }}"> Ajouter</a></button></p>
                             {% endif %}
                         </figcaption>
                     </figure>
@@ -43,7 +43,7 @@
                 <div class="modal-body">
                     <div class="formulaire">
                         {% if error %}
-                            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                            <div class="erreur alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
 
                         <form action="{{ path('homepage') }}" method="post">
@@ -66,4 +66,11 @@
         </div>
     </div>
     </footer>
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script src="{{ asset('js/ecommerce.js') }}"></script>
+    <script src="{{ asset("js/commande.js") }}"></script>
+
 {% endblock %}

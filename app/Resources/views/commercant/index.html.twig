@@ -11,7 +11,7 @@
                     <a class="nav-link" href="{{ path('client') }}">Clients</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('commande') }}">Commandes</a>
+                  <a class="nav-link" href="#">Commandes</a>
                 </li>
 
             </ul>
@@ -21,18 +21,22 @@
             <h1>Commande.s non livrée.s</h1>
 
             <section class="row placeholders d-flex flex-column ">
+                {% for commande in commandes %}
                 <div class=" placeholder commande">
-                    <h4>Titre de la Commande</h4>
-                    <div class="text-muted">Comntenu de la commande</div>
+                    <h4>commande de {{ commande.client.nom }}</h4>
+                    <div class="text-muted">
+                       {% for produit in panier %}
+                           <div class="placeholder commande">
+                               <p>Désignation : {{ produit.idProduit.designation }}</p>
+                               <p>Quantité : {{ produit.idProduit.quantite }}</p>
+                               <p>Prix : {{ produit.idProduit.prix }}</p>
+                           </div>
+                       {% endfor %}
+                        <p>montant : {{ commande.montantTotal }}</p>
+                        <button class="btn btn-dark">Livrer</button>
+                    </div>
                 </div>
-                <div class=" placeholder commande">
-                    <h4>Titre de la Commande</h4>
-                    <div class="text-muted">Comntenu de la commande</div>
-                </div>
-                <div class=" placeholder commande">
-                    <h4>Titre de la Commande</h4>
-                    <div class="text-muted">Comntenu de la commande</div>
-                </div>
+                {% endfor %}
             </section>
         </main>
     </div>
