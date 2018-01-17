@@ -2,12 +2,12 @@
 
 {% block body %}
    <h1>Bienvenue sur le site</h1>
-    <div class="container">
+    <div class="container-fluid">
         <div class="text-right"><span>trier par <a class="trier" href="{{ path('trier',{'item':'prix'}) }}">Prix</a> | <a class="trier" href="{{ path('trier',{'item' : 'designation'}) }}">Désignation</a> | <a class="trier" href="{{ path('trier',{'item' : 'quantite'}) }}">Disponibilité</a></span></div>
             <div class="content-figure">
                 {% for produit in listeProduit %}
                     <figure class="figure">
-                        <img class="figure-img img-fluid rounded img-acceuil-produit" src="{{ asset('uploads/image/'~produit.image) }}">
+                        <img class="figure-img img-fluid rounded img-acceuil-produit text-center" src="{{ asset('uploads/image/'~produit.image) }}">
                         <figcaption class="figure-caption">
                             <p><span class="designation">{{ produit.designation }}</span> <span class="prix">{{ produit.prix }}</span>€</p>
                             <p class="description">{{ produit.description }}</p>
@@ -55,7 +55,7 @@
                                 <input type="password" class="form-control" id="password" name="_password" />
 
                             </div>
-                            <button type="submit" class="btn btn-dark">login</button>
+                            <button id="loginForm" type="submit" class="btn btn-dark">login</button>
                         </form>
                     </div>
                 </div>

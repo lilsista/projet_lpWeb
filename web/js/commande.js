@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
     var erreur = false;
+    // language=JQuery-CSS
     $('.required').parent().find('.input').on('blur',function () {
        var divErreur = $(this).parent().find('.erreur');
        if(verifVide($(this).val())){
@@ -47,7 +48,7 @@ $(document).ready(function(){
        e.preventDefault();
        $('.required').parent().find('input').trigger('blur');
        if(!erreur){
-           var url = "http://127.0.0.1:8000/gestionCommande";
+           var url = "http://127.0.0.1:8000/gestionCommande/"+$('#idpanier').val();
            $.ajax({
                type: 'post',
                url: url,

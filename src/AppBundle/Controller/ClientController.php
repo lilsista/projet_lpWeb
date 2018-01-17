@@ -8,16 +8,27 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class ClientController extends Controller
 {
     /**
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/client",name="client")
+     * @Route("/commercant/client",name="client")
      */
-    public function clientAction(){
-        return $this->render('client/client.html.twig');
+    public function clientAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(Client::class);
+
+        $clients = $repository->findAll();
+        $listeClients = $this->get('knp_paginator')->paginate($clients,$request->get('page',1),6);
+
+        return $this->render('client/client.html.twig',array(
+            'clients' =>$listeClients
+        ));
     }
 }

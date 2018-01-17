@@ -46,8 +46,9 @@ class ProduitController extends Controller
             /**@var UploadedFile $file */
             $file = $produit->getImage();
 
+
             // Generate a unique name for the file before saving it
-            $fileName = md5(uniqid()) . $file->guessExtension() .'.';
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
             // Move the file to the directory where brochures are stored
             $file->move(
@@ -67,7 +68,12 @@ class ProduitController extends Controller
             $em->persist($data);
             $em->flush();
 
-            return new Response('Ajout réussi');
+            $repository = $em->getRepository(Produit::class);
+            $listeProduit = $repository->findBy(array('estCatalogue' => true),array('id'=> "DESC"));
+
+            $produits = $this->get('knp_paginator')->paginate($listeProduit,$request->query->get('page',1),5);
+
+            return $this->redirectToRoute('listeProduit',array('listeProduit' => $produits));
         }
 
         return $this->render('produit/produit.html.twig',array('formProduit'=>$formProduit->createView()));
@@ -83,7 +89,7 @@ class ProduitController extends Controller
 
         $repository = $this->getDoctrine()->getManager()->getRepository(Produit::class);
         $listeProduit = $repository->findBy(
-            ['estCatalogue' => true]
+            ['estCatalogue' => true],['id'=> "DESC"]
         );
 
         $produit = $this->get('knp_paginator')->paginate($listeProduit,$req->query->get('page',1),5);
@@ -108,41 +114,50 @@ class ProduitController extends Controller
         $formProduit = $this->createForm(ProduitType::class,$produit)
         ->add('modifier',SubmitType::class);
 
+        $image = $produit->getImage();
 
         if ($formProduit->handleRequest($request)->isValid()) {
 
             // $file stores the uploaded PDF file
 
-            $file = $produit->getImage();
+            if($formProduit['image']->getData() == null){
+                $produit->setImage($image);
+            }
+            else{
 
-            // Generate a unique name for the file before saving it
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
-            // Move the file to the directory where brochures are stored
-            $file->move(
-                $this->getParameter('image_directory'),
-                $fileName
-            );
+                $file = $produit->getImage();
 
-            // Update the 'brochure' property to store the PDF file name
-            // instead of its contents
-            $produit->setImage($fileName);
-            // Inutile de persister ici, Doctrine connait déjà notre annonce
+
+                // Generate a unique name for the file before saving it
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                $file->move(
+                    $this->getParameter('image_directory'),
+                    $fileName
+                );
+
+                // Update the 'brochure' property to store the PDF file name
+                // instead of its contents
+                $produit->setImage($fileName);
+                // Inutile de persister ici, Doctrine connait déjà notre annonce
+            }
             $em->flush();
 
-            return new Response("votre article a été modifier");
         }
 
-            return $this->render('produit/modifier.html.twig',array('produit'=>$produit,'formProduit'=>$formProduit->createView()));
+        return $this->render('produit/modifier.html.twig',array('produit'=>$produit,'formProduit'=>$formProduit->createView()));
     }
 
     /**
      * @Route("/supprimer/{id}",name="supprimer")
      * @param $id
-     * @param Request $req
+     * @param Request $request
      * @return Response
      */
-    public function supprimerAction($id,Request $req){
+    public function supprimerAction($id,Request $request){
+
 
         // récupére le produit dont l'id est $id
         $em = $this->getDoctrine()->getManager();
@@ -154,7 +169,8 @@ class ProduitController extends Controller
 
         $em->flush();
 
-        return new Response("supprimer");
+        $reponse = new JsonResponse();
+        return $reponse->setData(array('idLigne' => $id));
 
     }
 

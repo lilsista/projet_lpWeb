@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use function Sodium\add;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,7 +26,8 @@ class ProduitType extends AbstractType
             ->add('description',TextareaType::class)
             ->add('prix',MoneyType::class)
             ->add('quantite',NumberType::class)
-            ->add('image',FileType::class, array('label' => 'Image(JPG)','required'=>false, 'data_class'=>null));
+            ->add('image',FileType::class, array('label' => 'Image(JPG)','required'=>false, 'data_class'=>null))
+            ->add('est_catalogue',HiddenType::class,array('data' => true ));
 
     }
     

@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="{{ path('listeProduit') }}">Produits</a>
+            </li>
+            <li class="list-group-item">
+                <a href="{{ path('client') }}">Clients</a>
+            </li>
+            <li class="list-group-item">
+                <a href="{{ path('commandes') }}">Commandes</a>
+            </li>
+
+        </ul>
+        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+            <h1>Liste de commandes</h1>
+
+            <div style="margin-bottom: 20px; ">
+                <label>Trier par : </label>
+                <select id="trierCommande" class="custom-select" style="width: 250px;">
+                    <option value="alivrer">a livré</option>
+                    <option value="livrer">livrer</option>
+                    <option value="date">date</option>
+                    <option value="client">client</option>
+                </select>
+            </div>
+
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">date</th>
+                        <th scope="col">Montant</th>
+                        <th scope="col">Livré</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if commandes == null %}
+                        <tr><td>Pas de commandes</td></tr>
+                    {% else %}
+                        {% for commande in commandes %}
+                            <tr>
+                                <th scope="row">{{ commande.id }}</th>
+                                <th>
+                                    <p>Nom : {{ commande.client.nom }}</p>
+                                    <p>Prénom : {{ commande.client.prenom }}</p>
+                                    <p>Adresse Email : {{ commande.client.email }}</p>
+                                </th>
+                                <th>{{ commande.date | date("d/m/Y", "Europe/Paris") }}</th>
+                                <th>{{ commande.montantTotal }}</th>
+                                <th>
+                                    {% if commande.estLivre == true %}
+                                         <span>oui</span>
+                                    {% else %}
+                                        <span>non </span>
+                                    {% endif %}
+                                </th>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/listeCommande.js') }}"></script>
+{% endblock %}

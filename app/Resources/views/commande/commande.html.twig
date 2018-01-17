@@ -1,22 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    {% if commande == null %}
+        Vous n'avez pas de commande
+    {% else %}
+    <div class="">
         {% for com in commande %}
-        <div class="Identite border border-secondary" style="width: fit-content;padding: 10px; margin:30px 0 ;">
-            <p>{{ com.client.nom }}</p>
-            <p>{{ com.client.prenom }}</p>
-            <p>{{ com.client.email }}</p>
-        </div>
         <div class="dateCommande text-center" style="margin: 30px 0;">
-            <h2>Bon de Commande</h2>
-            <p>{{ com.date |date("m/d/Y", "Europe/Paris") }}</p>
+            <h2>Vos Commandes</h2>
+
         </div>
-        <div class="produitCommande">
-            <table class="table">
+        <div class="produitCommande" style="display: flex;align-content: space-between">
+            <table class="table" style="width: 800px;">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">Produit</th>
                         <th scope="col">Désignation</th>
                         <th scope="col">Quantite</th>
                         <th scope="col">Prix TTC</th>
@@ -24,23 +21,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for panierContient in panier %}
                         <tr>
-                            <td><img class="img-fluid rounded img-acceuil-produit" src="{{ asset('uploads/image/'~panierContient.idProduit.image) }}"></td>
-                            <td>{{ panierContient.idProduit.designation }}</td>
-                            <td>{{ panierContient.idProduit.quantite }}</td>
-                            <td>{{ panierContient.idProduit.prix }}</td>
-                            <td>{{ panierContient.idProduit.prix*panierContient.idProduit.quantite }}</td>
+                            <td>{{ com.designation}}</td>
+                            <td>{{ com.quantite }}</td>
+                            <td>{{ com.prix }} €</td>
+                            <td>{{ com.prix*com.quantite }} €</td>
                         </tr>
-                    {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div class="TotalComande border border-secondary" style="width: fit-content; padding: 5px;">
-            <p>Net à payer : {{ com.montantTotal }}€</p>
+            <div class="border border-dark" style="width: 150px;">
+                <h3 class="alert alert-dark text-white">Net à payer</h3>
+                <p></p>
+            </div>
         </div>
         {% endfor %}
     </div>
-
-
+    {% endif %}
 {% endblock %}

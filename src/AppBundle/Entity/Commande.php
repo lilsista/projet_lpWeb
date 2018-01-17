@@ -43,19 +43,23 @@ class Commande
     private $montantTotal;
 
     /**
-     * @ORM\OneToOne(targetEntity="Panier")
-     * @ORM\JoinColumn(name="idPanier",referencedColumnName="id")
-     */
-    private $panier;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Client")
-     * @ORM\JoinColumn(name="idClient",referencedColumnName="id")
+     * @var Client $client
+     *
+     * @ORM\ManyToOne(targetEntity="Client", inversedBy="commande", cascade={"persist", "merge"})
+     * @ORM\JoinColumns({
+     *  @ORM\JoinColumn(name="idClient", referencedColumnName="id")
+     * })
      */
     private $client;
 
     /**
-     * @return mixed
+     * @var int
+     * @ORM\Column(name ="idPanier", type="integer")
+     */
+    private $panier;
+
+    /**
+     * @return int
      */
     public function getPanier()
     {
@@ -63,7 +67,7 @@ class Commande
     }
 
     /**
-     * @param mixed $panier
+     * @param int $panier
      */
     public function setPanier($panier)
     {
@@ -71,7 +75,7 @@ class Commande
     }
 
     /**
-     * @return mixed
+     * @return Client
      */
     public function getClient()
     {
@@ -79,13 +83,12 @@ class Commande
     }
 
     /**
-     * @param mixed $client
+     * @param Client $client
      */
     public function setClient($client)
     {
         $this->client = $client;
     }
-
 
 
     /**

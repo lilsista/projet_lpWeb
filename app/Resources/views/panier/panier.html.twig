@@ -4,8 +4,6 @@
 <div class="container-fluid">
     {% if panier == null %}
         <p>votre panier est vide</p>
-    {% elseif estCommander == true %}
-        <p>votre panier est vide</p>
     {% else %}
     <div class="table-responsive">
         <table class="table">
@@ -17,6 +15,7 @@
                 <th scope="col">Quantite</th>
                 <th scope="col">Prix €</th>
                 <th scope="col">Total</th>
+                <th scope="col">Supprimer</th>
             </tr>
             </thead>
             <tbody>
@@ -37,17 +36,23 @@
                 </td>
                 <td class="prixUnitaire">{{ panierContient.idProduit.prix }}</td>
                 <td class="totalProduit totalProduit{{ panierContient.id }}">{{ panierContient.quantite*panierContient.idProduit.prix }}</td>
+                <td class="suppProduitCommande"><button class="btn btn-danger">Supprimer</button></td>
             </tr>
 
         {% endfor %}
             <tr>
                 <td></td><td></td><td></td><td></td>
                 <td class="totalGobal">{{ prixTotal }}</td>
+                <td></td>
             </tr>
         </table>
     </div>
         <div class="text-right">
+            {% if client == null %}
             <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal">Commander</button>
+            {% else %}
+                <button type="button" class="btn btn-dark"><a href="{{ path('gestionCommande',{ "idPanier": idPanier }) }}">Commander</a> </button>
+            {% endif %}
         </div>
             <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -95,7 +100,7 @@
 {% block javascripts %}
 
     {{ parent() }}
-    <script src="{{ asset('js/ecommerce.js') }}"></script>
+    <script src="{{ asset('js/panier.js') }}"></script>
     <script src="{{ asset("js/commande.js") }}"></script>
 
 {% endblock %}

@@ -12,6 +12,7 @@ namespace AppBundle\Controller;
 use AppBundle\AppBundle;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Commande;
+use AppBundle\Entity\CommandeProduit;
 use AppBundle\Entity\Panier;
 use AppBundle\Entity\PanierContient;
 use AppBundle\Entity\Produit;
@@ -37,10 +38,16 @@ class PanierController extends Controller
         // j'affiche le panier
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository(PanierContient::class);
+        $repositoryClient = $em->getRepository(Client::class);
 
         $panierContient = $repository->findBy(
             ['idPanier' => $idPanier]
         );
+
+        $client = $repositoryClient->findOneBy(array(
+            'panier' => $idPanier
+        ));
+
 
         // le prix Total
         $prixTotal = 0;
@@ -49,22 +56,12 @@ class PanierController extends Controller
             $prixTotal = $prixTotal + ($value->getIdProduit()->getPrix()*$value->getQuantite());
         }
 
-        /** @var TYPE_NAME $bool */
-        $bool = false;
-
-        foreach ($panierContient as $value){
-            if($value->isEstCommander() == $bool){
-                $bool = false;
-            }else{
-                $bool = true;
-            }
-        }
-
         return $this->render('panier/panier.html.twig',array(
                 'panier' => $panierContient,
                 'prixTotal'=> $prixTotal,
                 'idPanier'=> $idPanier,
-                'estCommander' => $bool
+                'client'  => $client
+
         ));
     }
 
@@ -128,104 +125,166 @@ class PanierController extends Controller
 
     }
 
+    /************************************************************************************/
+    // function
+
     /**
-     * @Route("/gestionCommande",name="gestionCommande")
+     * @param $tableau
+     */
+    public function quantite($tableau)
+    {
+        $quantiteMax = 0;
+        foreach($tableau as $value) {
+            $quantiteMax = $value->getIdProduit()->getQuantite();
+            $quantiteMax = $quantiteMax - $value->getQuantite();
+            if($quantiteMax<0) {
+                $value->getIdProduit()->setQuantite(0);
+            }
+            else {
+                $value->getIdProduit()->setQuantite($quantiteMax);
+            }
+        }
+    }
+
+
+    /**
+     * @param $tableau
+     * @return float|int
+     */
+    public function montantTotal($tableau)
+    {
+        $montantTotal = 0;
+        foreach ($tableau as $prix){
+            $montantTotal = $montantTotal+($prix->getQuantite()*$prix->getIdProduit()->getPrix());
+
+        }
+        return $montantTotal;
+    }
+
+    /****************************************************************************************/
+
+    /**
+     * @Route("/gestionCommande/{idPanier}",name="gestionCommande")
      * @param Request $request
      * @return string
      */
-    public function gestionCommandeAction(Request $request){
+    public function gestionCommandeAction(Request $request,$idPanier)
+    {
 
         $em = $this->getDoctrine()->getManager();
-
-        // on récupére les données
-        $email = $request->get('email');
-        $nom = $request->get('nom');
-        $prenom = $request->get('prenom');
-        $idPanier = $request->get('idpanier');
-
-        // on vérifie si elle ne sont pas vide
-        if(!empty($email) && !empty($nom) && !empty($prenom) && !(empty($idPanier))){
+        $repositoryPanier = $em->getRepository(Panier::class);
+        $repositoryClient = $em->getRepository(Client::class);
+        $repositoryPanierContient = $em->getRepository(PanierContient::class);
 
 
-            $repositoryPanier = $em->getRepository(Panier::class);
-            $repositoryClient = $em->getRepository(Client::class);
-            $repositoryPanierContient = $em->getRepository(PanierContient::class);
+        $date = date_create(date('Y-m-d'));
+
+
+        if ($request->isXmlHttpRequest()) {
+
+            // on récupére les données
+            $email = $request->get('email');
+            $nom = $request->get('nom');
+            $prenom = $request->get('prenom');
+            $idPanier = $request->get('idpanier');
 
             // on récupére les produits contenu dans le panier
             $produitPanier = $repositoryPanierContient->findBy(array(
                 'idPanier' => $idPanier
             ));
 
-            $client = $repositoryClient->findOneBy(array(
-                "panier" => $idPanier
-            ));
-            $date = date_create(date('Y-m-d'));
 
             $panier = $repositoryPanier->find($idPanier);
 
-            $quantiteMax = 0;
+            $this->quantite($produitPanier);
+
+
+            $client = new Client();
+
+            $client->setNom($nom);
+            $client->setPanier($panier);
+            $client->setPrenom($prenom);
+            $client->setEmail($email);
+
+            $commande = new Commande();
+
+            $commande->setPanier($panier->getId());
+            $commande->setClient($client);
+            $commande->setDate($date);
+            $commande->setMontantTotal($this->montantTotal($produitPanier));
+            $commande->setEstLivre(false);
+
+            $em->persist($commande);
+            $em->persist($client);
+            $em->flush();
+
+            $commandeProduit = new CommandeProduit();
             foreach ($produitPanier as $value){
-                $quantiteMax = $value->getIdProduit()->getQuantite();
-                $quantiteMax = $quantiteMax - $value->getQuantite();
-                if($quantiteMax<0){
-                    $value->getIdProduit()->setQuantite(0);
-                }else{
-                    $value->getIdProduit()->setQuantite($quantiteMax);
-                }
-
+                $commandeProduit = new CommandeProduit();
+                $commandeProduit->setQuantite($value->getQuantite());
+                $commandeProduit->setIdCommande($commande->getId());
+                $commandeProduit->setPrix($value->getIdProduit()-> getPrix());
+                $commandeProduit->setDesignation($value->getIdProduit()->getDesignation());
+                $em->persist($commandeProduit);
             }
 
-
-
-            if ($client) {
-
-                $commande = new Commande();
-
-                $commande->setPanier($panier);
-                $commande->setClient($client);
-                $commande->setDate($date);
-                $commande->setMontantTotal($request->get('montantTotal'));
-                $commande->setEstLivre(false);
-
-                $em->persist($commande);
-                $em->flush();
-            } else {
-
-
-                $client = new Client();
-
-                $client->setNom($nom);
-                $client->setPanier($panier);
-                $client->setPrenom($prenom);
-                $client->setEmail($email);
-
-
-
-                $commande = new Commande();
-
-                $commande->setPanier($panier);
-                $commande->setClient($client);
-                $commande->setDate($date);
-                $commande->setMontantTotal($request->get('montantTotal'));
-                $commande->setEstLivre(false);
-
-                $em->persist($client);
-                $em->persist($commande);
-                $em->flush();
-
+            foreach ($produitPanier as $value) {
+                $em->remove($value);
             }
+
+            $em->flush();
+
+            return new Response('Vôtre commande est disponible dans la section "panier/Vos Commandes"');
+        } else {
+
+            // on récupére les produits contenu dans le panier
+            $produitPanier = $repositoryPanierContient->findBy(array(
+                'idPanier' => $idPanier
+            ));
+            $panier = $repositoryPanier->find($idPanier);
+
+            $client = $repositoryClient->findOneBy(array(
+                "panier" => $idPanier
+            ));
+
+            $commande = new Commande();
+
+            $commande->setPanier($panier->getId());
+            $commande->setClient($client);
+            $commande->setDate($date);
+            $commande->setMontantTotal($this->montantTotal($produitPanier));
+            $commande->setEstLivre(false);
+
+            $em->persist($commande);
+            $em->flush();
 
             foreach ($produitPanier as $value){
-                $value->setEstCommander(true);
-                $em->flush();
+                $commandeProduit = new CommandeProduit();
+                $commandeProduit->setQuantite($value->getQuantite());
+                $commandeProduit->setIdCommande($commande->getId());
+                $commandeProduit->setPrix($value->getIdProduit()-> getPrix());
+                $commandeProduit->setDesignation($value->getIdProduit()->getDesignation());
+                $em->persist($commandeProduit);
             }
 
+            foreach ($produitPanier as $value) {
+                $em->remove($value);
+            }
 
+            $em->flush();
+
+            return new Response("ok");
         }
-        return new Response('Vôtre commande est disponible dans la section "panier/Vos Commandes"');
 
     }
 
+    public function suppProduitCommande($id){
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(PanierContient::class);
+        $produitCommande = $repository->find($id);
 
+        $em->remove($produitCommande);
+        $em->flush();
 
+    }
 }

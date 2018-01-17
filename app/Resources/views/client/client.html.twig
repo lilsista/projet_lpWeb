@@ -1,5 +1,47 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>page Client</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a  href="{{ path('listeProduit') }}">Produits</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ path('client') }}">Clients</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ path('commandes') }}">Commandes</a>
+                </li>
+
+            </ul>
+
+            <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+                <h1>Liste des clients</h1>
+
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Adresse Email</th>
+                            <th scope="col">Montant Total des commandes</th>
+                            <th scope="col">dat derniere commande</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in clients %}
+                            <tr>
+                                <td scope="row">{{ client.id }}</td>
+                                <td>{{ client.nom }}</td>
+                                <td>{{ client.email }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </div>
 {% endblock %}

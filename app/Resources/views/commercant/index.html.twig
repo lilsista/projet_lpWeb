@@ -1,44 +1,55 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="row">
-        <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-dark sidebar position-fixed">
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item">
-                    <a class="nav-link " href="{{ path('ajoutProduit') }}">Produits</a>
+    <div class="container-fluid">
+        <div class="row">
+            <ul class="list-group" style="width: 200px;">
+                <li class="list-group-item">
+                    <a href="{{ path('listeProduit') }}">Produits</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('client') }}">Clients</a>
+                <li class="list-group-item">
+                    <a href="{{ path('client') }}">Clients</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Commandes</a>
+                <li class="list-group-item">
+                  <a href="{{ path('commandes') }}">Commandes</a>
                 </li>
 
             </ul>
-        </nav>
 
-        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-            <h1>Commande.s non livrée.s</h1>
 
-            <section class="row placeholders d-flex flex-column ">
-                {% for commande in commandes %}
-                <div class=" placeholder commande">
-                    <h4>commande de {{ commande.client.nom }}</h4>
-                    <div class="text-muted">
-                       {% for produit in panier %}
-                           <div class="placeholder commande">
-                               <p>Désignation : {{ produit.idProduit.designation }}</p>
-                               <p>Quantité : {{ produit.idProduit.quantite }}</p>
-                               <p>Prix : {{ produit.idProduit.prix }}</p>
-                           </div>
-                       {% endfor %}
-                        <p>montant : {{ commande.montantTotal }}</p>
-                        <button class="btn btn-dark">Livrer</button>
-                    </div>
-                </div>
-                {% endfor %}
-            </section>
-        </main>
+            <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+                <h1>Commandes non livrées</h1>
+
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">date</th>
+                        <th scope="col">Montant</th>
+                        <th scope="col">A Livré</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for commande in commandes %}
+                        <tr>
+                            <th scope="row">{{ commande.id }}</th>
+                            <th>
+                                <p>Nom : {{ commande.client.nom }}</p>
+                                <p>Prénom : {{ commande.client.prenom }}</p>
+                                <p>Adresse Email : {{ commande.client.email }}</p>
+                            </th>
+                            <th>{{ commande.date | date("d/m/Y", "Europe/Paris") }}</th>
+                            <th>{{ commande.montantTotal }}</th>
+                            <th>
+                                <button class="btn btn-success"><a href="{{ path('livrerCommande',{'idCommande' : commande.id}) }}">Livrer</a></button>
+                            </th>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </main>
+        </div>
     </div>
 
 {% endblock %}

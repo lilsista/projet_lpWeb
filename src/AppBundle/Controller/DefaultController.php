@@ -29,12 +29,13 @@ class DefaultController extends Controller
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
+
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository(Produit::class);
         $listeProduit = $repository->findBy(
             ['estCatalogue'=> true]
         );
-        $produit = $this->get('knp_paginator')->paginate($listeProduit,$request->query->get('page',1),5);
+        $produit = $this->get('knp_paginator')->paginate($listeProduit,$request->query->get('page',1),8);
 
         $sessionUser = $this->get('session');
         $idUser = $sessionUser->getID();
@@ -56,7 +57,9 @@ class DefaultController extends Controller
 
         }
 
-        return $this->render('default/index.html.twig', array('listeProduit' => $produit,'panier' => $panier,'error'=>$error,'last_username' =>$lastUsername));
+        return $this->render('default/index.html.twig', array(
+            'listeProduit' => $produit,'panier' => $panier,'error'=>$error,'last_username' =>$lastUsername
+        ));
     }
 
     /**

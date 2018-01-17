@@ -16,59 +16,53 @@
     <div class="page">
         <header class="header">
         {% block navigation %}
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <a class="navbar-brand" href="#">Navbar</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    {% if app.request.attributes.get("_route") == "listeProduit" or app.request.attributes.get("_route") == "ajoutProduit" %}
-                    <div class="collapse navbar-collapse" id="navbarColor01">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{ path('homepage') }}">Home<span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('ajoutProduit') }}">Ajouter Produit</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('listeProduit') }}">Liste Produits</a>
-                            </li>
-                        </ul>
-                    </div>
-                    {% else %}
-                    <div class="collapse navbar-collapse" id="navbarColor01">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{ path('homepage') }}">Home <span class="sr-only">(current)</span></a>
-                            </li>
-                        </ul>
-                         {% if app.request.attributes.get("_route") == "commercant" or app.request.attributes.get("_route") == "ajoutProduit" %}
-                             <ul>
-                                 <li class="nav-item">
-                                     <a class="nav-link" href="{{ path('logout') }}">logout</a>
-                                 </li>
-                             </ul>
-                         {% elseif app.request.attributes.get("_route") == "homepage" %}
-                             <ul>
-                                 <li class="nav-item">
-                                     <a class="nav-link" href="{{ path('panier',{'idPanier': panier.id}) }}"> panier</a>
-                                 </li>
-                             </ul>
-                         {% elseif app.request.attributes.get('_route') == "panier" %}
-                             <ul>
-                                 <li class="nav-item">
-                                     <a class="nav-link" href="{{ path('commandeClient',{'id': idPanier}) }}"> Vos Commandes</a>
-                                 </li>
-                             </ul>
-                         {% else %}
-                            <form class="form-inline">
-                                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                                <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
-                            </form>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse">
+                {% if app.request.attributes.get("_route") in ['commercant','listeProduit','client','commandes','ajoutProduit','modifierProduit'] %}
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('commercant') }}">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        {% if app.request.attributes.get("_route") in ['listeProduit'] %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('ajoutProduit') }}">Ajouter Produit</a>
+                        </li>
+                        {% elseif app.request.attributes.get("_route") in ['ajoutProduit'] %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('listeProduit') }}">Liste Produits</a>
+                        </li>
                         {% endif %}
+                    </ul>
+                    <div class="my-2 my-lg-0" >
+
+                        <a href="{{ path('logout') }}">logout</a>
+
                     </div>
+                {% else %}
+                    <ul class="mr-auto navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('homepage') }}">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                    <div class="my-2 my-lg-0" >
+                    {% if app.request.attributes.get("_route") in ['homepage'] %}
+
+                        <a class="nav-link" href="{{ path('panier',{'idPanier': panier.id}) }}"> panier</a>
+
+                    {% elseif (app.request.attributes.get("_route") in ['panier'])  %}
+
+                        <a class="nav-link" href="{{ path('commandeClient',{'id': idPanier}) }}"> Vos Commande</a>
+                    {% else %}
+
                     {% endif %}
-                </nav>
+                    </div>
+                {% endif %}
+                </div>
+            </nav>
         {% endblock %}
         </header>
 

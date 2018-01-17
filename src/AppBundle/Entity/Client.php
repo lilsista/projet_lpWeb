@@ -43,26 +43,26 @@ class Client
     private $prenom;
 
     /**
-     * @var int
+     * @var ArrayCollection $commande
      *
-     * @ORM\Column(name="idCommande",type="integer")
+     * @ORM\OneToMany(targetEntity="Commande", mappedBy="client", cascade={"persist", "remove", "merge"})
      */
-    private $idCommande;
+    private $commande;
 
     /**
-     * @return int
+     * @return ArrayCollection
      */
-    public function getIdCommande()
+    public function getCommande()
     {
-        return $this->idCommande;
+        return $this->commande;
     }
 
     /**
-     * @param int $idCommande
+     * @param ArrayCollection $commande
      */
-    public function setIdCommande($idCommande)
+    public function setCommande($commande)
     {
-        $this->idCommande = $idCommande;
+        $this->commande = $commande;
     }
 
     /**
@@ -70,6 +70,7 @@ class Client
      * @ORM\JoinColumn(name="id_panier", referencedColumnName="id")
      */
     private $panier;
+
 
     /**
      * @return mixed
